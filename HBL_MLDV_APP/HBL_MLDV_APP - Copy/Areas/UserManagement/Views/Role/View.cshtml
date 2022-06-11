@@ -1,0 +1,287 @@
+﻿@model HBL_MLDV_APP.Areas.UserManagement.Models.Role.vu_role_mst_aprv
+@using HBL_MLDV_APP.Models.Security
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section PageStyles{
+
+    <link href="~/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="~/bower_components/bootstrap-toggle/css/bootstrap-toggle.min.css" rel="stylesheet" />
+    <link href="~/Content/plugins/iCheck/all.css" rel="stylesheet" />
+    <link href="~/bower_components/datatables/jquery.dataTables.min.css" rel="stylesheet" />
+}
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="nav-tabs-custom">
+            <!-- Tabs within a box -->
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#role-account" data-toggle="tab" style="background-color: transparent;">Edit Role</a></li>
+                <li><a id="livalidate" href="#validate" data-toggle="tab" style="background-color: transparent;">Verification</a></li>
+                <li><a href="#pool" data-toggle="tab" style="background-color: transparent;">Pool Records</a></li>
+                <div class="pull-right" style="padding-top:7px;padding-right:7px;">@Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-sm btn-primary" })</div>
+            </ul>
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                @Html.HiddenFor(x => x.sender)
+                <div class="tab-content no-padding">
+                    <div class="chart tab-pane active" id="role-account" style="position: relative; height: auto;">
+                        <div class="box-body">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="row">
+                                        <div class="col-sm-12 col-md-offset-2 col-md-6">
+                                            <div class="form-horizontal">
+                                                <div class="row">
+                                                    <div class="col-sm-12 col-md-3">
+                                                        @Html.LabelFor(x => x.role_desc, new { @class = "control-label", @for = "role_desc" })
+                                                    </div>
+                                                    <div class="col-sm-12 col-md-9">
+                                                        @Html.TextBoxFor(model => model.role_desc, new { @class = "form-control" })
+                                                        @Html.ValidationMessageFor(model => model.role_desc, "", new { @class = "text-danger" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12 col-md-4">
+                                            <div class="form-horizontal">
+                                                <div class="row">
+                                                    <div class="col-sm-12 col-md-3">
+                                                        @Html.LabelFor(x => x.status_check, new { @class = "control-label", @for = "status_check" })
+                                                    </div>
+                                                    <div class="col-sm-10 col-md-9">
+                                                        @Html.CheckBoxFor(model => model.status_check, new { @data_toggle = "toggle" })
+                                                        @Html.ValidationMessageFor(model => model.status_check, "", new { @class = "text-danger" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <table class="table table-bordered table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="text-center" style="width:25%;">Module</th>
+                                                        <th class="text-center">
+                                                            <span><input type="checkbox" class="minimal" id="selectAll" data-ref-check=".selectCheck" /></span>
+                                                            <span style="padding-left:20px;">View</span>
+                                                        </th>
+                                                        <th class="text-center">
+                                                            <span><input type="checkbox" class="minimal" id="createAll" data-ref-check=".createCheck" /></span>
+                                                            <span style="padding-left:20px;">Create</span>
+                                                        </th>
+                                                        <th class="text-center">
+                                                            <span><input type="checkbox" class="minimal" id="updateAll" data-ref-check=".updateCheck" /></span>
+                                                            <span style="padding-left:20px;">View & Edit</span>
+                                                        </th>
+                                                        <th class="text-center">
+                                                            <span><input type="checkbox" class="minimal" id="deleteAll" data-ref-check=".deleteCheck" /></span>
+                                                            <span style="padding-left:20px;">Delete</span>
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @{
+                                                        if (TempData.ContainsKey("mnuList"))
+                                                        {
+                                                            var parentMenusList = (TempData.Peek("mnuList") as List<HBL_MLDV_APP.Areas.UserManagement.Models.vu_mnu_activity>).Where(a => a.activityparentid == 0).ToList();
+                                                            int index = 0;
+
+                                                            foreach (var item in parentMenusList)
+                                                            {
+                                                                <tr>
+                                                                    <th colspan="6">@item.activitytitle</th>
+                                                                </tr>
+
+                                                                var childMenusList = (TempData.Peek("mnuList") as List<HBL_MLDV_APP.Areas.UserManagement.Models.vu_mnu_activity>).Where(a => a.activityparentid == item.activityid).ToList();
+                                                                if (childMenusList != null && childMenusList.Count > 0)
+                                                                {
+                                                                    for (int i = 0; i < childMenusList.Count; i++)
+                                                                    {
+                                                                        <tr>
+                                                                            <td><span style="padding-left:75px;">@childMenusList[i].activitytitle</span></td>
+                                                                            @{
+                                                                                var assignedMenu = Model.cando.Where(x => x.activityid == childMenusList[i].activityid).SingleOrDefault();
+                                                                                if (assignedMenu != null && assignedMenu.activityid > 0)
+                                                                                {
+                                                                                    <input type="hidden" value="@assignedMenu.activityid" name="cando[@index].activityid" />
+                                                                                    <input type="hidden" value="@assignedMenu.activityparentid" name="cando[@index].activityparentid" />
+                                                                                    <input type="hidden" value="@assignedMenu.activitytitle" name="cando[@index].activitytitle" />
+                                                                                    <input type="hidden" value="@assignedMenu.created_by" name="cando[@index].created_by" />
+                                                                                    <input type="hidden" value="@assignedMenu.created_on" name="cando[@index].created_on" />
+                                                                                    <input type="hidden" value="@assignedMenu.record_status" name="cando[@index].record_status" />
+                                                                                    <input type="hidden" value="@assignedMenu.role_sk" name="cando[@index].role_sk" />
+                                                                                    <input type="hidden" value="@assignedMenu.role_cando_sk" name="cando[@index].role_cando_sk" />
+                                                                                    <input type="hidden" value="@assignedMenu.row_version" name="cando[@index].row_version" />
+                                                                                    <input type="hidden" value="Unchanged" name="cando[@index].state" />
+                                                                                    <input type="hidden" value="@assignedMenu.updated_by" name="cando[@index].updated_by" />
+                                                                                    <input type="hidden" value="@assignedMenu.updated_on" name="cando[@index].updated_on" />
+                                                                                    <input type="hidden" value="@assignedMenu.can_view_bool.ToString()" name="cando[@index].can_view_bool" />
+                                                                                    <input type="hidden" value="@assignedMenu.can_add_bool.ToString()" name="cando[@index].can_add_bool" />
+                                                                                    <input type="hidden" value="@assignedMenu.can_edit_bool.ToString()" name="cando[@index].can_edit_bool" />
+                                                                                    <input type="hidden" value="@assignedMenu.can_del_bool.ToString()" name="cando[@index].can_del_bool" />
+
+                                                                                    <td class="text-center"><input type="checkbox" class="minimal selectCheck" @(assignedMenu.can_view_bool ? "checked" : "") name="cando[@index].can_view_bool" /></td>
+                                                                                    <td class="text-center"><input type="checkbox" class="minimal createCheck" @(assignedMenu.can_add_bool ? "checked" : "") name="cando[@index].can_add_bool" /></td>
+                                                                                    <td class="text-center"><input type="checkbox" class="minimal updateCheck" @(assignedMenu.can_edit_bool ? "checked" : "") name="cando[@index].can_edit_bool" /></td>
+                                                                                    <td class="text-center"><input type="checkbox" class="minimal deleteCheck" @(assignedMenu.can_del_bool ? "checked" : "") name="cando[@index].can_del_bool" /></td>
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <input type="hidden" value="@childMenusList[i].activityid" name="cando[@index].activityid" />
+                                                                                    <input type="hidden" value="@childMenusList[i].activityparentid" name="cando[@index].activityparentid" />
+                                                                                    <input type="hidden" value="@childMenusList[i].activitytitle" name="cando[@index].activitytitle" />
+                                                                                    <input type="hidden" value="false" name="cando[@index].can_view_bool" />
+                                                                                    <input type="hidden" value="false" name="cando[@index].can_add_bool" />
+                                                                                    <input type="hidden" value="false" name="cando[@index].can_edit_bool" />
+                                                                                    <input type="hidden" value="false" name="cando[@index].can_del_bool" />
+                                                                                    <td class="text-center"><input type="checkbox" class="minimal selectCheck" name="cando[@index].can_view_bool" /></td>
+                                                                                    <td class="text-center"><input type="checkbox" class="minimal createCheck" name="cando[@index].can_add_bool" /></td>
+                                                                                    <td class="text-center"><input type="checkbox" class="minimal updateCheck" name="cando[@index].can_edit_bool" /></td>
+                                                                                    <td class="text-center"><input type="checkbox" class="minimal deleteCheck" name="cando[@index].can_del_bool" /></td>
+                                                                                }
+                                                                            }
+                                                                        </tr>
+
+                                                                        index++;
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                    @*<tr>
+                                                            <th colspan="5">Transactions</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="text-center">FC Trading</td>
+                                                            <td class="text-center"><input type="checkbox" class="js-switch" /></td>
+                                                            <td class="text-center"><input type="checkbox" class="js-switch" /></td>
+                                                            <td class="text-center"><input type="checkbox" class="js-switch" /></td>
+                                                            <td class="text-center"><input type="checkbox" class="js-switch" /></td>
+                                                            <td></td>
+                                                        </tr>
+                                                        <tr style="background-color: beige;">
+                                                            <td class="text-center">FC Trading</td>
+                                                            <td class="text-center"><input type="checkbox" class="js-switch" /></td>
+                                                            <td class="text-center"><input type="checkbox" class="js-switch" /></td>
+                                                            <td class="text-center"><input type="checkbox" class="js-switch" /></td>
+                                                            <td class="text-center"><input type="checkbox" class="js-switch" /></td>
+                                                            <td>Counter Staff</td>
+                                                        </tr>
+                                                        <tr style="background-color: beige;">
+                                                            <td class="text-center">Remittance</td>
+                                                            <td class="text-center"><input type="checkbox" class="js-switch" /></td>
+                                                            <td class="text-center"><input type="checkbox" class="js-switch" /></td>
+                                                            <td class="text-center"><input type="checkbox" class="js-switch" /></td>
+                                                            <td class="text-center"><input type="checkbox" class="js-switch" /></td>
+                                                            <td>Counter Staff</td>
+                                                        </tr>
+                                                        <tr style="background-color: beige;">
+                                                            <td class="text-center">TT Payment</td>
+                                                            <td class="text-center"><input type="checkbox" class="js-switch" /></td>
+                                                            <td class="text-center"><input type="checkbox" class="js-switch" /></td>
+                                                            <td class="text-center"><input type="checkbox" class="js-switch" /></td>
+                                                            <td class="text-center"><input type="checkbox" class="js-switch" /></td>
+                                                            <td>Counter Staff</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th colspan="5">Setup</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="text-center">Customer Profile</td>
+                                                            <td class="text-center"><input type="checkbox" class="js-switch" /></td>
+                                                            <td class="text-center"><input type="checkbox" class="js-switch" /></td>
+                                                            <td class="text-center"><input type="checkbox" class="js-switch" /></td>
+                                                            <td class="text-center"><input type="checkbox" class="js-switch" /></td>
+                                                            <td>Counter Staff</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="text-center">Settlement Rate</td>
+                                                            <td class="text-center"><input type="checkbox" class="js-switch" /></td>
+                                                            <td class="text-center"><input type="checkbox" class="js-switch" /></td>
+                                                            <td class="text-center"><input type="checkbox" class="js-switch" /></td>
+                                                            <td class="text-center"><input type="checkbox" class="js-switch" /></td>
+                                                            <td>Counter Staff</td>
+                                                        </tr>*@
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chart tab-pane" id="validate" style="position: relative; height: auto;">
+                        <div class="box-body">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <ul style="list-style:none;" id="validationlst"></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @Html.Partial("~/Views/Home/_PoolRecordsPartial.cshtml")
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section PageScripts {
+
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script src="~/bower_components/select2/dist/js/select2.full.min.js"></script>
+    <script src="~/bower_components/bootstrap-toggle/js/bootstrap-toggle.min.js"></script>
+    <script src="~/Content/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+    <script src="~/Content/plugins/iCheck/icheck.min.js"></script>
+    <script src="~/bower_components/datatables/jquery.dataTables.js"></script>
+
+    @{
+        if (TempData["Notify"] != null)
+        {
+            <script>Notify("@TempData["NotifyType"].ToString()", "@TempData["Notify"].ToString()");</script>
+        }
+    }
+
+<script>
+        $.validator.setDefaults({
+            ignore: ":hidden, .ignore"
+        });
+
+        $("#role-account").on("change", "input,select,textarea", function () {
+            $("#state").attr("Value", "Changed").val("Changed");
+        });
+
+        $(document).ready(function () {
+            // Get pool records for the current document
+            GetPoolRecords(3029, @Model.role_sk);
+
+            @{
+                if (Model.selectAll) {
+                    <text>$("#selectAll").iCheck("check");</text>
+                }
+                if (Model.createAll) {
+                    <text>$("#createAll").iCheck("check");</text>
+                }
+                if (Model.updateAll) {
+                    <text>$("#updateAll").iCheck("check");</text>
+                }
+                if (Model.deleteAll) {
+                    <text>$("#deleteAll").iCheck("check");</text>
+                }
+            }
+            $('body').find("input,select,textarea").prop("disabled", true);
+        });
+</script>
+    <script src="~/Scripts/Validation.js"></script>
+    <script src="~/Scripts/RoleAccess.js"></script>
+}

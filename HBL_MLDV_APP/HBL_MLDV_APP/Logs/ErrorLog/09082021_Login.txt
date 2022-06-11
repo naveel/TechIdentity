@@ -1,0 +1,33 @@
+8/9/2021 12:30:04 PM
+GetLogin
+------------------------------
+Newtonsoft.Json.JsonReaderException: Unexpected character encountered while parsing value: <. Path '', line 0, position 0.
+   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.ReadInternal()
+   at Newtonsoft.Json.JsonReader.ReadAsStringInternal()
+   at Newtonsoft.Json.JsonTextReader.ReadAsString()
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.ReadForType(JsonReader reader, JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at HBL_MLDV_APP.Controllers.LoginController.<GetLogin>d__4.MoveNext() in C:\Users\Dev\Documents\Visual Studio 2015\Projects\HBL_MLDV_APP\HBL_MLDV_APP\Controllers\LoginController.cs:line 95
+------------------------------
+8/9/2021 1:07:03 PM
+GetLogin
+------------------------------
+System.AggregateException: One or more errors occurred. ---> System.Threading.Tasks.TaskCanceledException: A task was canceled.
+   --- End of inner exception stack trace ---
+   at System.Threading.Tasks.Task.ThrowIfExceptional(Boolean includeTaskCanceledExceptions)
+   at System.Threading.Tasks.Task`1.GetResultCore(Boolean waitCompletionNotification)
+   at System.Threading.Tasks.Task`1.get_Result()
+   at HBL_MLDV_APP.Repository.LoginRepository.<GetLoginData>d__1.MoveNext() in C:\Users\Dev\Documents\Visual Studio 2015\Projects\HBL_MLDV_APP\HBL_MLDV_APP\Repository\LoginRepository.cs:line 34
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at HBL_MLDV_APP.Controllers.LoginController.<GetLogin>d__4.MoveNext() in C:\Users\Dev\Documents\Visual Studio 2015\Projects\HBL_MLDV_APP\HBL_MLDV_APP\Controllers\LoginController.cs:line 68
+---> (Inner Exception #0) System.Threading.Tasks.TaskCanceledException: A task was canceled.<---
+
+------------------------------

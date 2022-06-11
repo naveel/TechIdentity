@@ -1,0 +1,153 @@
+﻿<div class="chart tab-pane" id="pool">
+    <div class="box-body">
+        <div class="row">
+            <div class="col-sm-12">
+                <table id="tblPoolData" class="table table-striped table-bordered dataTable" role="grid" aria-describedby="example2_info">
+                    <thead>
+                        <tr>
+                            <td>Frwd.</td>
+                            <td>
+                                Doc. Type
+                            </td>
+                            <td>
+                                Doc. No.
+                            </td>
+                            <td>
+                                Pool
+                            </td>
+                            <td>
+                                Approval Category
+                            </td>
+                            <td>
+                                Description
+                            </td>
+                            <td>
+                                Created by
+                            </td>
+                            <td>
+                                Created on
+                            </td>
+                            <td>
+                                Status
+                            </td>
+                            <td>Reason</td>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var tablePool;
+    $(document).ready(function () {
+        //setTimeout(function () {
+        //    var table = $('#tblPoolData').DataTable();
+        //    table.columns.adjust();
+        //}, 3000);
+
+    });
+
+    function DateConvert(dateStr) {
+        var parsedDate = new Date(parseInt(dateStr.substr(6)));
+        var jsDate = new Date(parsedDate)
+        return setZeroindate(jsDate.getDate()) + "-" + setZeroindate(jsDate.getMonth() + 1) + "-" + jsDate.getFullYear() + " " + jsDate.getHours() + ":" + jsDate.getMinutes();
+    }
+
+    function setZeroindate(res) {
+        if (res < 10) {
+            return "0" + res;
+        }
+        else {
+            return res;
+        }
+    }
+
+    function GetPoolRecords(doc_typ_sk, mst_sk) {
+        PoolRecordsUpdate(doc_typ_sk, mst_sk);
+
+            $($.fn.dataTable.tables(true)).DataTable()
+                   .columns.adjust();
+
+        //setInterval(function () {
+        //    PoolRecordsUpdate(doc_typ_sk, mst_sk);
+        //}, 1000000);
+
+
+    }
+//    $('#transactions_link').click(
+//    $($.fn.dataTable.tables(true)).DataTable()
+//.columns.adjust());
+
+    function PoolRecordsUpdate(doc_typ_sk, mst_sk) {
+        $.ajax({
+            url: '/Home/GetPoolDocsByDocTypSk',
+            type: 'GET',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: { doc_typ_sk: doc_typ_sk, mst_sk: mst_sk },
+            success: function (data) {
+                // If already is DataTable then clear and destroy
+                if ($.fn.dataTable.isDataTable("#tblPoolData")) {
+                    $("#tblPoolData").DataTable().clear().destroy();
+                }
+                tablePool = $('#tblPoolData').DataTable({
+                    data: data,
+                    "scrollX": true,
+                    columns: [
+                        {
+                            data: "Forwarded",
+                            render: function (obj, type, row) {
+                                if (obj != null) {
+                                    if (obj.trim() != ":") {
+                                        return '<i class="fa fa-share" title="' + obj + '"></i>';
+                                    }
+                                }
+                                return "";
+                            }
+                        },
+                        { "data": "doc_nme" },
+                        { "data": "doc_no" },
+                        { "data": "pool_nme" },
+                        { "data": "cat_desc" },
+                        { "data": "cat_dtl_desc" },
+                        { "data": "user_ful_name" },
+                        {
+                            data: "create_dt_tme",
+                            render: function (value) {
+                                return DateConvert(value);
+                            }
+                        },
+                        { "data": "approval_status" },
+                        { "data": "rmks" }
+                    ],
+                    columnDefs: [
+                        { "width": "5%", "targets": 0, "className": "text-center" },
+                        { "width": "10%", "targets": 1, },
+                        { "width": "10%", "targets": 2 },
+                        { "width": "10%", "targets": 3 },
+                        { "width": "20%", "targets": 4 },
+                        { "width": "20%", "targets": 5 },
+                        { "width": "10%", "targets": 6 },
+                        { "width": "10%", "targets": 7, "className": "text-center" },
+                        { "width": "8%", "targets": 8, "className": "text-center" }
+                        //{ "width": "5%", "targets": 10, "className": "text-center", "orderable": false },
+                        //{ "width": "30%", "targets": 11, "style": "padding:4px;" },
+                        //{ "width": "30%", "targets": 10 },
+                    ],
+                    order: [[4, "asc"]]
+                });
+            },
+            error: function (data) {
+                //console.log(data);
+                Notify("error", "Error getting list");
+            },
+            failure: function (data) {
+                //console.log(data);
+                Notify("error", "Failure getting list");
+            }
+        });
+    }
+</script>

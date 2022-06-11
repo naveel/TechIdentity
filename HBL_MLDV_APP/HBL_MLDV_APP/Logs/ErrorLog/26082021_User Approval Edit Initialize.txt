@@ -1,0 +1,28 @@
+8/26/2021 11:28:43 AM
+Edit
+------------------------------
+System.FormatException: The input is not a valid Base-64 string as it contains a non-base 64 character, more than two padding characters, or an illegal character among the padding characters. 
+   at System.Convert.FromBase64_Decode(Char* startInputPtr, Int32 inputLength, Byte* startDestPtr, Int32 destLength)
+   at System.Convert.FromBase64CharPtr(Char* inputPtr, Int32 inputLength)
+   at System.Convert.FromBase64String(String s)
+   at HBL_MLDV_APP.App_Start.EncryptDecrypt.Decrypt(String cipherText) in E:\Naveel\GIT_PROJECTS\HBL_MLDV_APP\HBL_MLDV_APP\App_Start\EncryptDecrypt.cs:line 39
+   at HBL_MLDV_APP.Areas.UserManagement.Controllers.UserController.<Edit>d__8.MoveNext() in E:\Naveel\GIT_PROJECTS\HBL_MLDV_APP\HBL_MLDV_APP\Areas\UserManagement\Controllers\UserController.cs:line 289
+------------------------------
+8/26/2021 11:29:49 AM
+Edit
+------------------------------
+System.FormatException: The input is not a valid Base-64 string as it contains a non-base 64 character, more than two padding characters, or an illegal character among the padding characters. 
+   at System.Convert.FromBase64_Decode(Char* startInputPtr, Int32 inputLength, Byte* startDestPtr, Int32 destLength)
+   at System.Convert.FromBase64CharPtr(Char* inputPtr, Int32 inputLength)
+   at System.Convert.FromBase64String(String s)
+   at HBL_MLDV_APP.App_Start.EncryptDecrypt.Decrypt(String cipherText) in E:\Naveel\GIT_PROJECTS\HBL_MLDV_APP\HBL_MLDV_APP\App_Start\EncryptDecrypt.cs:line 39
+   at HBL_MLDV_APP.Areas.UserManagement.Controllers.UserController.<Edit>d__8.MoveNext() in E:\Naveel\GIT_PROJECTS\HBL_MLDV_APP\HBL_MLDV_APP\Areas\UserManagement\Controllers\UserController.cs:line 289
+------------------------------
+8/26/2021 11:30:35 AM
+Edit
+------------------------------
+System.ArgumentNullException: Value cannot be null.
+Parameter name: source
+   at System.Linq.Enumerable.Where[TSource](IEnumerable`1 source, Func`2 predicate)
+   at HBL_MLDV_APP.Areas.UserManagement.Controllers.UserController.<Edit>d__8.MoveNext() in E:\Naveel\GIT_PROJECTS\HBL_MLDV_APP\HBL_MLDV_APP\Areas\UserManagement\Controllers\UserController.cs:line 246
+------------------------------

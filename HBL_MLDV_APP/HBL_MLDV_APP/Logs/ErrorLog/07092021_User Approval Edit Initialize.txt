@@ -1,0 +1,8 @@
+9/7/2021 11:45:05 AM
+Edit
+------------------------------
+System.ArgumentNullException: Value cannot be null.
+Parameter name: source
+   at System.Linq.Enumerable.Where[TSource](IEnumerable`1 source, Func`2 predicate)
+   at HBL_MLDV_APP.Areas.UserManagement.Controllers.UserController.<Edit>d__8.MoveNext() in E:\Naveel\GIT_PROJECTS\HBL_MLDV_APP\HBL_MLDV_APP\Areas\UserManagement\Controllers\UserController.cs:line 246
+------------------------------
